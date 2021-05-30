@@ -1,7 +1,7 @@
 package com.freshjuice.fl.shiro.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.freshjuice.fl.utils.FlWebUtils;
+import com.freshjuice.fl.common.utils.FlWebUtils;
 import org.apache.shiro.session.SessionException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.LogoutFilter;

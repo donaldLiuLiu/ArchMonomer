@@ -1,8 +1,7 @@
 package com.freshjuice.fl.web.base;
 
-import com.freshjuice.fl.exception.FlRootException;
-import com.freshjuice.fl.exception.FlRootExceptionResolver;
-import com.freshjuice.fl.utils.FlWebUtils;
+import com.freshjuice.fl.common.exception.FlRootException;
+import com.freshjuice.fl.common.utils.FlWebUtils;
 import org.apache.shiro.authz.UnauthenticatedException;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.slf4j.Logger;

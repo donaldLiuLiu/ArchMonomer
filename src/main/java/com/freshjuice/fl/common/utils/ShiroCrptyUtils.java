@@ -1,4 +1,4 @@
-package com.freshjuice.fl.utils;
+package com.freshjuice.fl.common.utils;
 
 import org.apache.shiro.authc.HostAuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;

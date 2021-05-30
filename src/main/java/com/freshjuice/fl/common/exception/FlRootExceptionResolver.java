@@ -1,4 +1,4 @@
-package com.freshjuice.fl.exception;
+package com.freshjuice.fl.common.exception;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,7 +11,7 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
-import com.freshjuice.fl.utils.FlWebUtils;
+import com.freshjuice.fl.common.utils.FlWebUtils;
 
 public class FlRootExceptionResolver implements HandlerExceptionResolver {
 	private Logger logger = LoggerFactory.getLogger(FlRootExceptionResolver.class);

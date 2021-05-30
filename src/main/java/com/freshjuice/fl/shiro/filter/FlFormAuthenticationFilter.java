@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.freshjuice.fl.base.entity.PriorityResource;
 import com.freshjuice.fl.base.service.IResourceService;
-import com.freshjuice.fl.utils.FlWebUtils;
+import com.freshjuice.fl.common.utils.FlWebUtils;
 
 @Component("flFormAuthenticationFilter")
 public class FlFormAuthenticationFilter extends FormAuthenticationFilter {

@@ -34,7 +34,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.util.UrlPathHelper;
 
-import com.freshjuice.fl.exception.FlRootExceptionResolver;
+import com.freshjuice.fl.common.exception.FlRootExceptionResolver;
 
 @Configuration
 @ComponentScan(basePackages = "com.**.web", 

@@ -1,4 +1,4 @@
-package com.freshjuice.fl.utils;
+package com.freshjuice.fl.common.utils;
 
 public class HfmTree {
 

@@ -1,4 +1,4 @@
-package com.freshjuice.fl.exception;
+package com.freshjuice.fl.common.exception;
 
 public class FlResourceExistsException extends FlRootException {
 
