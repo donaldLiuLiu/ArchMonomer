@@ -1,9 +1,9 @@
 package com.freshjuice.monomer.interceptor;
 
-import com.freshjuice.monomer.priority.entity.PriorityResource;
 import com.freshjuice.monomer.common.exception.FlResourceExistsException;
-import com.freshjuice.monomer.priority.service.IResourceService;
 import com.freshjuice.monomer.common.utils.FlWebUtils;
+import com.freshjuice.monomer.priority.entity.ResourcePriority;
+import com.freshjuice.monomer.priority.service.ResourcePriorityService;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.method.HandlerMethod;
@@ -22,14 +22,14 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class FlHandlerInterceptor implements HandlerInterceptor {
 
-    private IResourceService resourceService;
+    private ResourcePriorityService resourcePriorityService;
 
-    public IResourceService getResourceService() {
-        return resourceService;
+    public ResourcePriorityService getResourceService() {
+        return resourcePriorityService;
     }
 
-    public void setResourceService(IResourceService resourceService) {
-        this.resourceService = resourceService;
+    public void setResourceService(ResourcePriorityService resourceService) {
+        this.resourcePriorityService = resourceService;
     }
 
     @Override
@@ -37,8 +37,8 @@ public class FlHandlerInterceptor implements HandlerInterceptor {
         //判断请求url exists
         String requestPath = FlWebUtils.getRequestUri(request);
         String applicationPath = FlWebUtils.getPathWithinApplication(request);
-        PriorityResource resource = resourceService.getFResourceOfPath(applicationPath);
-        if(resource == null) throw new FlResourceExistsException("请求资源[" + requestPath + "]不存在");
+        //ResourcePriority resource = resourcePriorityService.getByUrl(applicationPath);
+        //if(resource == null) throw new FlResourceExistsException("请求资源[" + requestPath + "]不存在"); //TODO,去掉，并非所有资源都配置在库中了
 
         if(handler.getClass() == HandlerMethod.class) {
             HandlerMethod handlerMethod = (HandlerMethod) handler;

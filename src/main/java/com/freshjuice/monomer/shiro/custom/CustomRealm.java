@@ -1,35 +1,35 @@
 package com.freshjuice.monomer.shiro.custom;
 
 import java.util.List;
-
+import java.util.stream.Collectors;
 import com.freshjuice.monomer.common.enums.PrincipalEnum;
+import com.freshjuice.monomer.priority.entity.ResourcePriority;
 import com.freshjuice.monomer.priority.entity.User;
+import com.freshjuice.monomer.priority.service.ResourcePriorityService;
 import com.freshjuice.monomer.shiro.UserPrincipal;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-
-import com.freshjuice.monomer.priority.service.IResourceService;
-import com.freshjuice.monomer.priority.service.IUserService;
+import com.freshjuice.monomer.priority.service.UserService;
 
 public class CustomRealm extends AuthorizingRealm {
 	
-	private IUserService userService;
-	private IResourceService resourceService;
+	private UserService userService;
+	private ResourcePriorityService resourcePriorityService;
 	
-	public IUserService getUserService() {
+	public UserService getUserService() {
 		return userService;
 	}
-	public void setUserService(IUserService userService) {
+	public void setUserService(UserService userService) {
 		this.userService = userService;
 	}
-	public IResourceService getResourceService() {
-		return resourceService;
+	public ResourcePriorityService getResourceService() {
+		return resourcePriorityService;
 	}
-	public void setResourceService(IResourceService resourceService) {
-		this.resourceService = resourceService;
+	public void setResourceService(ResourcePriorityService resourcePriorityService) {
+		this.resourcePriorityService = resourcePriorityService;
 	}
 	
 	@Override
@@ -41,7 +41,8 @@ public class CustomRealm extends AuthorizingRealm {
 		//String principal = (String) paramPrincipalCollection.getPrimaryPrincipal();
 		//if(userPrincipal == null) return null;  //如果无认证信息，但是该资源进行Authorize(这当属不正常情况)
 		if(PrincipalEnum.USERNAME.getValue().equals(userPrincipal.getType().getValue())) {
-			List<String> permissions = resourceService.getPermissionsOfUserByUn(userPrincipal.getUsername());
+			List<ResourcePriority> resources = resourcePriorityService.getResourcePriorities(userPrincipal.getUsername());
+			List<String> permissions = resources.stream().map(r -> r.getCode()).collect(Collectors.toList());
 
 			SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
 			simpleAuthorizationInfo.addStringPermissions(permissions);
@@ -72,14 +73,13 @@ public class CustomRealm extends AuthorizingRealm {
 
 		UsernamePasswordToken usernamePasswordToken = (UsernamePasswordToken) token;
 		String username = usernamePasswordToken.getUsername();
-		//String password = userService.getPswdOfUserByUn(username);
-		User user = userService.getUserByUn(username);
+		User user = userService.getUserByName(username);
 
 		//if(password == null) return null;
 		if(user == null) throw new UnknownAccountException("用户名: [" + username + "]不存在");
 
 		return new SimpleAuthenticationInfo(new UserPrincipal(username, user.getPhone(), PrincipalEnum.USERNAME),
-				user.getUserPswd(),
+				user.getPassword(),
 				this.getName());
 	}
 

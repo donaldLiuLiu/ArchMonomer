@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.freshjuice.monomer.priority.service.ResourcePriorityService;
 import com.freshjuice.monomer.shiro.*;
 import com.freshjuice.monomer.shiro.custom.CustomRealm;
 import com.freshjuice.monomer.shiro.FlMultiRealmSuccessfulStrategy;
@@ -29,10 +30,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.freshjuice.monomer.priority.service.IResourceService;
-import com.freshjuice.monomer.priority.service.IUserService;
+import com.freshjuice.monomer.priority.service.UserService;
 import com.freshjuice.monomer.shiro.filter.FlFormAuthenticationFilter;
-import org.springframework.context.annotation.Import;
 import org.springframework.data.redis.core.RedisTemplate;
 
 
@@ -86,15 +85,15 @@ public class ApplicationShiro {
 	 * @return
 	 */
 	@Autowired
-	private IUserService userService;
+	private UserService userService;
 	@Autowired
-	private IResourceService resourceService;
+	private ResourcePriorityService resourcePriorityService;
 
 	@Bean
 	public CustomRealm customRealm() {
 		CustomRealm customRealm = new CustomRealm();
 		customRealm.setUserService(userService);
-		customRealm.setResourceService(resourceService);
+		customRealm.setResourceService(resourcePriorityService);
 		return customRealm;
 	}
 
@@ -112,7 +111,7 @@ public class ApplicationShiro {
 	public PhoneRealm phoneRealm() {
 		PhoneRealm phoneRealm = new PhoneRealm();
 		phoneRealm.setUserService(userService);
-		phoneRealm.setResourceService(resourceService);
+		phoneRealm.setResourceService(resourcePriorityService);
 		phoneRealm.setCredentialsMatcher(phoneCredentialsMatcher());
 		return phoneRealm;
 	}

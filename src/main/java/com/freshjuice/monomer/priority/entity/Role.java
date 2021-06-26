@@ -4,8 +4,7 @@ import com.freshjuice.monomer.common.entity.BaseEntity;
 import lombok.Data;
 
 @Data
-public class User extends BaseEntity {
-    private String userName;
-    private String password;
-    private String phone;
+public class Role extends BaseEntity {
+    private String roleCode;
+    private String roleName;
 }

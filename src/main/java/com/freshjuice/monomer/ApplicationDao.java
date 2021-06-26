@@ -6,6 +6,7 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,9 +24,9 @@ import com.alibaba.druid.wall.WallFilter;
 
 @Configuration
 @PropertySource(value={"classpath:db.properties"})
+@MapperScan("com.freshjuice.monomer.**.mapper")
 public class ApplicationDao {
-	
-	//javaConfig 踩坑记 http://www.coderli.com/spring-configuration-autowire-failed/
+
 	
 	@Bean
 	public static PropertySourcesPlaceholderConfigurer placehodlerConfigurer() {
@@ -162,19 +163,14 @@ public class ApplicationDao {
 	public JdbcTemplate jdbcTemplate(DataSource dataSource) {
 		return new JdbcTemplate(dataSource);
 	}
-    /*sqlSessionFactory
-    * sqlSessionFactory更加详细配置 实践
-    * spring Resource加载器 实践
-    *  1 ClasspathResource 加载classpath中的资源
-    *   1） 实例：junit启动时classpath为test-classes目录，此时ClasspathResource无法加载classes目录下面的mapper.xml文件
-    *            因此，在pom.xml中配置test-resource去加载src.main.java目录下面的mapper.xml文件
-    * */
+
+	/*SqlSessionFactoryBean*/
     @Bean
     public SqlSessionFactoryBean sqlSessionFactoryBean(DataSource dataSource) throws Exception {
     	SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
     	sqlSessionFactoryBean.setDataSource(dataSource);
     	PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-		sqlSessionFactoryBean.setMapperLocations(resolver.getResources("classpath:/**/*.sqlmap.xml"));
+		sqlSessionFactoryBean.setMapperLocations(resolver.getResources("classpath*:com/freshjuice/monomer/**/*.Mapper.xml"));
     	return sqlSessionFactoryBean;
     }
     

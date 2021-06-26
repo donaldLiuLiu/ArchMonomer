@@ -7,14 +7,14 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
+import com.freshjuice.monomer.priority.entity.ResourcePriority;
+import com.freshjuice.monomer.priority.service.ResourcePriorityService;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.freshjuice.monomer.priority.entity.PriorityResource;
-import com.freshjuice.monomer.priority.service.IResourceService;
 import com.freshjuice.monomer.common.utils.FlWebUtils;
 
 @Component("flFormAuthenticationFilter")
@@ -33,7 +33,8 @@ public class FlFormAuthenticationFilter extends FormAuthenticationFilter {
 	}
 	
 	@Autowired
-	private IResourceService resourceService;
+	private ResourcePriorityService resourcePriorityService;
+
 	@Override
 	protected boolean onAccessDenied(ServletRequest request,
 			ServletResponse response) throws Exception {
@@ -47,9 +48,9 @@ public class FlFormAuthenticationFilter extends FormAuthenticationFilter {
 				return true;
 			}
 			//如果不是登陆确认请求，根据该请求的url查询该请求对应的资源
-			PriorityResource resource = resourceService.getFResourceOfPath(requestUrl);
+			ResourcePriority resource = resourcePriorityService.getByUrl(requestUrl);
 			if(resource != null) { //如果该请求对应的resource 不为 null，
-				if("0".equals(resource.getAuthf())) { //如果该请求无需认证
+				if("0".equals(resource.getAuthIf())) { //如果该请求无需认证
 					return true;
 				} else if(FlWebUtils.fJsonRequestAcceptExtend((HttpServletRequest) request)) { //如果该请求需要认证，返回json
 					response.setCharacterEncoding("UTF-8");

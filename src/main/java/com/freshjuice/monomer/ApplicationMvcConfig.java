@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.freshjuice.monomer.priority.service.IResourceService;
 import com.freshjuice.monomer.interceptor.FlHandlerInterceptor;
+import com.freshjuice.monomer.priority.service.ResourcePriorityService;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
@@ -63,12 +63,12 @@ public class ApplicationMvcConfig extends WebMvcConfigurationSupport {
 	}
 
 	@Autowired
-	private IResourceService resourceService;
+	private ResourcePriorityService resourcePriorityService;
 
 	@Bean
 	public FlHandlerInterceptor flBaseInterceptor() {
 		FlHandlerInterceptor flBaseInterceptor = new FlHandlerInterceptor();
-		flBaseInterceptor.setResourceService(resourceService);
+		flBaseInterceptor.setResourceService(resourcePriorityService);
 		return flBaseInterceptor;
 	}
 

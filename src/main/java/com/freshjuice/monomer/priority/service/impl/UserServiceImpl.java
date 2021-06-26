@@ -5,68 +5,45 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import com.freshjuice.monomer.priority.dao.IUserDao;
-import com.freshjuice.monomer.priority.service.IUserService;
+import com.freshjuice.monomer.priority.mapper.UserMapper;
+import com.freshjuice.monomer.priority.service.UserService;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service("userService")
-public class UserServiceImpl implements IUserService {
+@Service
+public class UserServiceImpl implements UserService {
 
 	@Autowired
-	private IUserDao userDao;
+	private UserMapper userMapper;
 	@Autowired
-	private RedisTemplate<String, Object> redisTempleteComm;
+	private RedisTemplate<String, Object> redisTemplate;
+
 
 	@Override
-	public String getPswdOfUserByUn(String principal) {
-		return userDao.getPswdOfUserByUn(principal);
-	}
-
-	@Override
-	public User getUserByUn(String username) {
-		User user = (User) redisTempleteComm.opsForValue().get("user:" + username);
+	public User getUserByName(String username) {
+		User user = (User) redisTemplate.opsForValue().get("user:" + username);
 		if (user != null) return user;
-		User userDb = userDao.getUserByUn(username);
-		redisTempleteComm.opsForValue().set("user::" + username, userDb);
+		User userDb = userMapper.getUserByName(username);
+		redisTemplate.opsForValue().set("user:" + username, userDb);
 		return userDb;
 	}
 
 	@Override
 	public User getUserByPhone(String phone) {
-		User user = (User) redisTempleteComm.opsForValue().get("user:" + phone);
+		User user = (User) redisTemplate.opsForValue().get("user:" + phone);
 		if(user != null) return user;
-		User userDb = userDao.getUserByPhone(phone);
-		redisTempleteComm.opsForValue().set("user::" + phone, userDb);
+		User userDb = userMapper.getUserByPhone(phone);
+		redisTemplate.opsForValue().set("user:" + phone, userDb);
 		return userDb;
 	}
 
 	@Override
-	public User getUserById(String userId) {
-		User user = (User) redisTempleteComm.opsForValue().get("user:" + userId);
+	public User getUserById(Long id) {
+		User user = (User) redisTemplate.opsForValue().get("user:" + id);
 		if(user != null) return user;
-		User userDb = userDao.getUserById(userId);
-		redisTempleteComm.opsForValue().set("user:" + userId, userDb);
+		User userDb = userMapper.getUserById(id);
+		redisTemplate.opsForValue().set("user:" + id, userDb);
 		return userDb;
 	}
-
-	/**
-	 * cache方案
-	 * 读： 查询cache,命中返回,不命中查询db,写入cache，查询cache，写入cache失败均没关系
-	 * 写： 更新db，删除cache(删除成功或者失败都没关系)，开启异步删除消息(保证成功执行一次删除)
-	 * @param user
-	 */
-	@Transactional
-	@Override
-	public void updateUser(User user) {
-		User userPrev = getUserById(user.getUserId());
-		userDao.updateUser(user);
-		redisTempleteComm.delete("user:" + userPrev.getUserId());
-		redisTempleteComm.delete("user:" + userPrev.getUserName());
-		redisTempleteComm.delete("user:" + userPrev.getPhone());
-		//向消息队列写一个异步删除消息，消息队列消费必须确保该删除成功执行一次
-
-	}
-
 
 
 	/*
